@@ -41,11 +41,26 @@ export const RAW_DATA = {
   세종,
 } as { [key: string | symbol]: AirKoreaAir | AirKoreaAir[] };
 
-export const fetchFake = (location: keyof typeof RAW_DATA, pageNo: number) => {
+export const fetchFake = (
+  { sidoName, pageNo }: { sidoName: keyof typeof RAW_DATA; pageNo: number },
+  signal?: AbortSignal,
+) => {
   console.log('WARN Using fetchFake');
   return new Promise<AirKoreaAir>((resolve, reject) => {
-    setTimeout(() => {
-      if (!Object.hasOwn(RAW_DATA, location)) {
+    const abortEvent = () => {
+      try {
+        signal?.throwIfAborted();
+      } catch (e) {
+        reject(e);
+      }
+      timeoutId && clearTimeout(timeoutId);
+    };
+
+    signal?.addEventListener('abort', abortEvent);
+    const timeoutId = setTimeout(() => {
+      signal?.removeEventListener('abort', abortEvent);
+
+      if (!Object.hasOwn(RAW_DATA, sidoName)) {
         resolve(NO_PAGE(pageNo));
         return;
       }
@@ -54,7 +69,7 @@ export const fetchFake = (location: keyof typeof RAW_DATA, pageNo: number) => {
         return;
       }
 
-      const data = RAW_DATA[location];
+      const data = RAW_DATA[sidoName];
 
       if (Array.isArray(data)) {
         if (data.length <= pageNo - 1) {

@@ -4,16 +4,15 @@ import LocationSelect from '../LocationSelect';
 
 type Props = {
   locationLists: string[][];
-  defaultValues: string[];
+  values: string[];
+  disabledList: boolean[];
   onChange: (location: string, idx: number) => void;
 };
 
-const defaultProps = {
-  disabled: false,
-};
+const defaultProps = {};
 
 const LocationSelectGroup = (props: Props & typeof defaultProps) => {
-  const { disabled, locationLists, defaultValues, onChange } = props;
+  const { disabledList, locationLists, values, onChange } = props;
 
   const onChangeWrapped = (idx: number) => (location: string) => {
     onChange(location, idx);
@@ -25,9 +24,9 @@ const LocationSelectGroup = (props: Props & typeof defaultProps) => {
         <LocationSelect
           key={idx}
           locationList={locationList}
-          defaultValue={defaultValues[idx] ?? undefined}
+          value={values?.[idx] ?? undefined}
           onChange={onChangeWrapped(idx)}
-          disabled={disabled}
+          disabled={disabledList?.[idx] ?? false}
         />
       ))}
     </S.LocationSelectGroup>

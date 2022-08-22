@@ -1,28 +1,29 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import DarkModeProvider from './context/DarkModeProvider';
+import GlobalStyle from './styles/globalStyles';
 import { darkTheme, lightTheme } from './styles/theme';
 import store from './modules';
-import LocationPage from './pages/LocationPage';
-import AllPage from './pages/AllPage';
+import StationPage from './pages/StationPage';
+import SidoPage from './pages/SidoPage';
 import FavoritePage from './pages/FavoritePage';
+import MainPage from '@/pages/MainPage';
+import NavLinks from '@/components/NavLinks';
 
 function App() {
   return (
     <DarkModeProvider light={lightTheme} dark={darkTheme}>
+      <GlobalStyle />
       <Provider store={store}>
         <BrowserRouter>
           <Routes>
-            <Route path="/location" element={<LocationPage />}></Route>
-            <Route path="/all" element={<AllPage />}></Route>
+            <Route path="/" element={<MainPage defaultPath="/sido" />}></Route>
+            <Route path="/station" element={<StationPage />}></Route>
+            <Route path="/sido" element={<SidoPage />}></Route>
             <Route path="/favorite" element={<FavoritePage />}></Route>
           </Routes>
-          <div>
-            <NavLink to="/location">내 지역보기</NavLink>
-            <NavLink to="/all">전체 시도보기</NavLink>
-            <NavLink to="/favorite">즐겨찾기</NavLink>
-          </div>
+          <NavLinks />
         </BrowserRouter>
       </Provider>
     </DarkModeProvider>

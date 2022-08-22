@@ -13,16 +13,20 @@ const server = axios.create({
   },
 });
 
-export async function getCtprvnRltmMesureDnsty({ sidoName, pageNo }: { sidoName: string; pageNo: number }) {
+export async function getCtprvnRltmMesureDnsty(
+  { sidoName, pageNo }: { sidoName: string; pageNo: number },
+  signal?: AbortSignal,
+) {
   // const response = await server.get<AirKoreaAir>('getCtprvnRltmMesureDnsty', {
   //   params: {
   //     sidoName,
   //     pageNo,
   //   },
+  //   signal: signal,
   // });
   // const data = response.data;
 
-  const data = await fetchFake(sidoName, pageNo);
+  const data = await fetchFake({ sidoName, pageNo }, signal);
 
   // 에러가 꼭 json 형태로 내려주지 않는다.....
   const resultCode = data?.response?.header?.resultCode;
@@ -30,6 +34,10 @@ export async function getCtprvnRltmMesureDnsty({ sidoName, pageNo }: { sidoName:
 
   if (error) {
     throw new Error(`서버 error / resultCode: ${resultCode}`);
+  }
+
+  if (data.response.body.totalCount === 0) {
+    throw new Error(`잘못된 요청으로 빈 값 반환`);
   }
 
   return data;

@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useInsertionEffect, useRef, useState } from 'react';
+import React, { useCallback } from 'react';
 import * as S from './style';
-import { LocationOption } from './style';
 
 interface Props {
   locationList: string[];
-  defaultValue?: string;
+  value?: string;
   onChange: (location: string) => void;
 }
 
@@ -13,7 +12,7 @@ const defaultProps = {
 };
 
 const LocationSelect = (props: Props & typeof defaultProps) => {
-  const { disabled, locationList, defaultValue, onChange } = props;
+  const { disabled, locationList, value, onChange } = props;
   const onSelectChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       onChange(e.target.value);
@@ -23,7 +22,7 @@ const LocationSelect = (props: Props & typeof defaultProps) => {
 
   return (
     <>
-      <S.LocationSelect onChange={onSelectChange} defaultValue={defaultValue} disabled={disabled}>
+      <S.LocationSelect onChange={onSelectChange} value={value} disabled={disabled}>
         {locationList.map((data, idx) => (
           <S.LocationOption key={data} value={data}>
             {data}
